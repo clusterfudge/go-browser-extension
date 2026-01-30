@@ -1,4 +1,4 @@
-import { Background } from '../background-mv2.js';
+import { Background } from '../background-mv3.js';
 import { Api } from '../../apis/firefox.js';
 
 

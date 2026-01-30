@@ -19,21 +19,13 @@ destination for that go link.
 Currently the extension supports **Chrome** and **Firefox**. If you're interested in support for other browsers,
 please let us know by [submitting an issue](https://github.com/trotto/browser-extension/issues/new).
 
-## Manifest Versions
+## Manifest V3
 
-This extension uses different manifest versions depending on the browser:
+This extension uses Manifest V3 for both Chrome and Firefox. Key features:
 
-| Browser | Manifest Version | Request Handling |
-|---------|-----------------|------------------|
-| Chrome  | V3              | `declarativeNetRequest` (service worker) |
-| Firefox | V2              | `webRequestBlocking` (background script) |
-
-Chrome deprecated Manifest V2 in 2024 and requires V3 for new extensions and updates. The V3 architecture
-uses service workers instead of background pages and replaces the blocking `webRequest` API with the
-declarative `declarativeNetRequest` API.
-
-Firefox continues to support Manifest V2 and the `webRequestBlocking` API, so we maintain V2 for Firefox
-to preserve the existing functionality.
+- **Chrome**: Uses a service worker for the background script
+- **Firefox**: Uses an event page for the background script (Firefox MV3 doesn't require service workers)
+- **Both**: Use `declarativeNetRequest` API for URL redirects and `chrome.storage.local` for settings
 
 ## Architecture
 
@@ -47,10 +39,9 @@ cross-browser extension development.)
 
 ### Key Files
 
-- `src/background/background-mv3.js` - Chrome Manifest V3 background service worker
-- `src/background/background-mv2.js` - Firefox Manifest V2 background script
-- `src/apis/chrome.js` - Chrome API wrapper for service workers
-- `src/apis/firefox.js` - Firefox API wrapper
+- `src/background/background-mv3.js` - Shared MV3 background script logic
+- `src/apis/chrome.js` - Chrome API wrapper (service worker)
+- `src/apis/firefox.js` - Firefox API wrapper (event page)
 - `editions/{edition}/{browser}/manifest_overrides.json` - Browser-specific manifest settings
 
 The `yarn build` and `yarn dev` commands described below use webpack to bundle only the JavaScript
@@ -147,14 +138,3 @@ Chrome has to be "taught" that go links are URLs and not search engine queries. 
 takes you to https://www.google.com/search?q=go%2Ffoo. So when the extension is installed, it automatically opens
 https://go/ in a new tab so Chrome learns that `go` should be treated as a hostname. The extension then quickly
 closes that tab so that it's not cluttering the window.
-
-### What's the difference between Chrome and Firefox implementations?
-
-Chrome uses Manifest V3 which requires:
-- **Service workers** instead of persistent background pages (no access to DOM or `localStorage`)
-- **`declarativeNetRequest`** API instead of `webRequestBlocking` for redirect rules
-- **`chrome.storage.local`** for persisting settings (since `localStorage` isn't available in service workers)
-
-Firefox continues to use Manifest V2 which allows:
-- **Persistent background scripts** with full access to `localStorage`
-- **`webRequestBlocking`** API for flexible, programmatic request handling
