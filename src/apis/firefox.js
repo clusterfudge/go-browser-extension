@@ -12,6 +12,10 @@ export class Api {
       },
       managed: {
         get: browser.storage.managed.get
+      },
+      local: {
+        get: browser.storage.local.get,
+        set: browser.storage.local.set
       }
     };
 

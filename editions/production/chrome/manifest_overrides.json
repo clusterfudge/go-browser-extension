@@ -1,0 +1,18 @@
+{
+  "manifest_version": 3,
+  "action": {
+    "default_icon": "icon@48.png",
+    "default_popup": "popup.html"
+  },
+  "permissions": [
+    "storage",
+    "declarativeNetRequest"
+  ],
+  "host_permissions": [
+    "*://go/*",
+    "*://*.trot.to/*"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  }
+}

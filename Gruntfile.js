@@ -49,6 +49,12 @@ module.exports = function(grunt) {
     webpackOptions.optimization = { minimize: false };
   }
 
+  // Build manifest override sources - browser-specific overrides take precedence
+  const manifestOverrideSources = [
+    `editions/${edition}/manifest_overrides.json`,
+    `editions/${edition}/${browser}/manifest_overrides.json`
+  ].filter(path => grunt.file.exists(path));
+
   var config = {
     pkg: grunt.file.readJSON('package.json'),
 
@@ -70,12 +76,13 @@ module.exports = function(grunt) {
     },
     update_json: {
       manifest_file: {
-        src: [
-          `editions/${edition}/manifest_overrides.json`,
-          `editions/${edition}/${browser}/manifest_overrides.json`
-        ],
+        src: manifestOverrideSources,
         dest: outputDir + 'manifest.json',
-        fields: ['name', 'version', 'description', 'permissions', 'optional_permissions', 'storage']
+        fields: [
+          'name', 'version', 'description', 'permissions', 'optional_permissions', 
+          'storage', 'manifest_version', 'action', 'browser_action', 'background',
+          'host_permissions', 'browser_specific_settings'
+        ]
       }
     },
     webpack: {

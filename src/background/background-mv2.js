@@ -1,4 +1,4 @@
-import { DEFAULT_INSTANCE, getInstanceUrl } from '../config';
+import { DEFAULT_INSTANCE, getInstanceUrl } from '../config-mv2';
 
 const BLACKLISTED_HOSTNAMES = ['localhost'];
 
