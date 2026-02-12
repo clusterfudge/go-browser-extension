@@ -19,6 +19,14 @@ destination for that go link.
 Currently the extension supports **Chrome** and **Firefox**. If you're interested in support for other browsers,
 please let us know by [submitting an issue](https://github.com/trotto/browser-extension/issues/new).
 
+## Manifest V3
+
+This extension uses Manifest V3 for both Chrome and Firefox. Key features:
+
+- **Chrome**: Uses a service worker for the background script
+- **Firefox**: Uses an event page for the background script (Firefox MV3 doesn't require service workers)
+- **Both**: Use `declarativeNetRequest` API for URL redirects and `chrome.storage.local` for settings
+
 ## Architecture
 
 The browser-specific code is confined to API definitions
@@ -28,6 +36,13 @@ uses dependency injection to provide the browser-specific API implementation to 
 code. (h/t to Sergey Yavnyi at Grammarly
 for [his great talk](https://www.youtube.com/watch?v=D2XFeihxaCU) on how Grammarly does
 cross-browser extension development.)
+
+### Key Files
+
+- `src/background/background-mv3.js` - Shared MV3 background script logic
+- `src/apis/chrome.js` - Chrome API wrapper (service worker)
+- `src/apis/firefox.js` - Firefox API wrapper (event page)
+- `editions/{edition}/{browser}/manifest_overrides.json` - Browser-specific manifest settings
 
 The `yarn build` and `yarn dev` commands described below use webpack to bundle only the JavaScript
 needed for the specified browser and use Grunt to prepare the other assets that are part of the extension,

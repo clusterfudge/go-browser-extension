@@ -1,6 +1,5 @@
 {
   "manifest_version": 3,
-  "description": "This extension makes Trotto \"go links\" work seamlessly in Firefox.",
   "action": {
     "default_icon": "icon@48.png",
     "default_popup": "popup.html"
@@ -14,11 +13,6 @@
     "*://*.trot.to/*"
   ],
   "background": {
-    "scripts": ["background.js"]
-  },
-  "browser_specific_settings": {
-    "gecko": {
-      "id": "trotto-extension@trot.to"
-    }
+    "service_worker": "background.js"
   }
 }

@@ -4,3 +4,4 @@ dists/
 node_modules/
 yarn-error.log
 *.zip
+.DS_Store

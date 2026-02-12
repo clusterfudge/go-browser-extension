@@ -1,11 +1,10 @@
-const browser = require('webextension-polyfill');
-
+// Chrome Manifest V3 API implementation
+// Service workers don't have access to webextension-polyfill, use chrome.* APIs directly
 
 export class Api {
   constructor() {
     this.runtime = {
       onInstalled: {
-        // note: this doesn't work: `addListener: chrome.runtime.onInstalled.addListener`
         addListener: (callback) => chrome.runtime.onInstalled.addListener(callback)
       }
     };
@@ -15,21 +14,27 @@ export class Api {
         addListener: (callback) => chrome.storage.onChanged.addListener(callback)
       },
       managed: {
-        get: browser.storage.managed.get
+        get: (keys) => chrome.storage.managed.get(keys)
+      },
+      local: {
+        get: (keys) => chrome.storage.local.get(keys),
+        set: (items) => chrome.storage.local.set(items)
       }
     };
 
-    this.webRequest = {
-      onBeforeRequest: browser.webRequest.onBeforeRequest
+    this.declarativeNetRequest = {
+      getDynamicRules: () => chrome.declarativeNetRequest.getDynamicRules(),
+      updateDynamicRules: (options) => chrome.declarativeNetRequest.updateDynamicRules(options)
     };
 
     this.tabs = {
-      query: browser.tabs.query,
-      create: browser.tabs.create,
-      remove: browser.tabs.remove,
-      update: browser.tabs.update,
+      query: (queryInfo) => chrome.tabs.query(queryInfo),
+      create: (createProperties) => chrome.tabs.create(createProperties),
+      remove: (tabId) => chrome.tabs.remove(tabId),
+      update: (tabId, updateProperties) => chrome.tabs.update(tabId, updateProperties),
       onUpdated: {
-        addListener: (callback) => browser.tabs.onUpdated.addListener(callback)
+        addListener: (callback) => chrome.tabs.onUpdated.addListener(callback),
+        removeListener: (callback) => chrome.tabs.onUpdated.removeListener(callback)
       }
     };
   }

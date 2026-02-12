@@ -1,4 +1,4 @@
-import { Background } from '../background.js';
+import { Background } from '../background-mv3.js';
 import { Api } from '../../apis/chrome.js';
 
 

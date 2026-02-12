@@ -1,31 +1,38 @@
+// Firefox Manifest V3 API implementation
 export class Api {
   constructor() {
     this.runtime = {
       onInstalled: {
-        addListener: browser.runtime.onInstalled.addListener
+        addListener: (callback) => browser.runtime.onInstalled.addListener(callback)
       }
     };
 
     this.storage = {
       onChanged: {
-        addListener: browser.storage.onChanged.addListener
+        addListener: (callback) => browser.storage.onChanged.addListener(callback)
       },
       managed: {
-        get: browser.storage.managed.get
+        get: (keys) => browser.storage.managed.get(keys)
+      },
+      local: {
+        get: (keys) => browser.storage.local.get(keys),
+        set: (items) => browser.storage.local.set(items)
       }
     };
 
-    this.webRequest = {
-      onBeforeRequest: browser.webRequest.onBeforeRequest
+    this.declarativeNetRequest = {
+      getDynamicRules: () => browser.declarativeNetRequest.getDynamicRules(),
+      updateDynamicRules: (options) => browser.declarativeNetRequest.updateDynamicRules(options)
     };
 
     this.tabs = {
-      query: browser.tabs.query,
-      create: browser.tabs.create,
-      remove: browser.tabs.remove,
-      update: browser.tabs.update,
+      query: (queryInfo) => browser.tabs.query(queryInfo),
+      create: (createProperties) => browser.tabs.create(createProperties),
+      remove: (tabId) => browser.tabs.remove(tabId),
+      update: (tabId, updateProperties) => browser.tabs.update(tabId, updateProperties),
       onUpdated: {
-        addListener: browser.tabs.onUpdated.addListener
+        addListener: (callback) => browser.tabs.onUpdated.addListener(callback),
+        removeListener: (callback) => browser.tabs.onUpdated.removeListener(callback)
       }
     };
   }
